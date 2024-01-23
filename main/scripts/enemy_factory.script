@@ -1,0 +1,34 @@
+local frequency = 1 -- math.random(0.5, 2.5)
+local min_x = 60
+local max_x = 600
+
+local component = "#factory" -- Define component here
+
+function init(self)
+	self.timer = math.random(2,5) -- this (1)
+	-- make the game deterministic
+	math.randomseed(0)
+end
+
+local function spawn_enemy()
+	-- Get the screen dimensions
+	local screen_width = 640
+	local screen_height = 1136
+
+	-- Generate random coordinates within the screen
+	local x = math.random(50, screen_width) -- setting boundaries at which the enemies spawn, 
+	local y = screen_height-- so they don't spawn on top of player	
+
+	-- Spawn the enemy at the random coordinates
+	local enemy_instance = factory.create(component, vmath.vector3(x, y, 0))
+end
+
+function update(self, dt)
+
+	
+	self.timer = self.timer - dt
+	if self.timer <= 0 then
+		self.timer =  math.random(2,5) -- and this (1) make the enmies spawn at random 1 to 3 second intervals.
+		spawn_enemy()
+	end
+end

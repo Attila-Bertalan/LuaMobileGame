@@ -1,0 +1,5 @@
+
+local game_state = require "game_state"
+function init(self)
+	-- this script does nothing but ensures game state is loaded
+end

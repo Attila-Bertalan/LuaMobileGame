@@ -1,0 +1,69 @@
+
+local game_state = require "main.game_state"
+-- require game_State, as the score script reloads itself everytime a new level is loaded
+
+
+local function load_menu(self)
+	msg.post("/loader#main_menu", "load")
+	msg.post("/loader#main_menu", "enable")
+end
+
+local function unload_menu(self)
+	msg.post("/loader#main_menu","unload")
+end
+
+local function load_main(self)
+	msg.post("/loader#main", "load")
+	msg.post("/loader#main", "enable")
+end
+
+local function unload_main(self)
+	msg.post("/loader#main", "unload", {})
+end
+
+local function load_level2(self)
+	msg.post("/loader#level2", "load")
+	msg.post("/loader#level2", "enable")
+end
+
+local function load_level_complete(self)
+	msg.post("/loader#level_complete", "load")
+	msg.post("/loader#level_complete", "enable")
+end
+
+local function unload_level_complete(self)
+	msg.post("/loader#level_complete", "unload")
+end
+
+local function load_score(self)
+	msg.post("loader#score", "load")
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	load_menu(self)
+	
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("start") then
+		unload_menu(self)
+		load_main(self)
+		load_score(self)
+	end
+
+	if message_id == hash("level_complete") then
+		unload_main(self)
+		load_level_complete(self)
+		--print(game_state.current_level , "from loader script")
+	end
+
+	if message_id == hash("next") then
+		if game_state.current_level == 2 then
+			
+			game_state.score = 0
+			unload_level_complete(self)
+			load_level2(self)
+		end
+	end
+end

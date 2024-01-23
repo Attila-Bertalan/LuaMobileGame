@@ -1,0 +1,11 @@
+local printer = require "printer.printer"
+function init(self)
+	self.printer = printer.new(self, template_name)
+end
+function update(self, dt)
+	printer.update(self)
+	self.printer:print("Galactic Giggles")
+end
+function final(self)
+	printer.final(self)
+end

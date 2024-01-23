@@ -1,0 +1,42 @@
+
+
+local game_state = require "main.game_state"
+-- game_state holds score and current level variables
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	self.score_node = gui.get_node("score")
+	print(self.score_node)
+end
+
+local function scale_down(self, node)
+	local s = 1.0
+	gui.animate(node, gui.PROP_SCALE, vmath.vector4(s, s, s, 0), gui.EASING_OUT, 0.05)
+end
+
+function on_message(self, message_id, message, sender)
+	
+	if message_id == hash("add_score") then
+		
+		local score_increment = 10
+		
+		game_state.score = game_state.score + score_increment
+		gui.set_text(self.score_node, tostring(game_state.score))
+		print(game_state.score)
+		print(game_state.current_level)
+
+		if game_state.current_level == 1 and game_state.score >= 10 then
+			msg.post("loader:/loader", "level_complete")
+			game_state.score = 0
+			--print(game_state.score , " from score gui script") 
+			game_state.current_level = game_state.current_level + 1
+		elseif game_state.current_level == 2 and game_state.score >= 30 then
+			msg.post("loader:/loader", "level_complete")
+		end
+	elseif message_id == hash("next") then
+		game_state.current_level = game_state.current_level + 1
+		game_state.score = 0
+		msg.post("loader:/loader", "load_level2")
+		print("Switching to level 2")
+	end
+end

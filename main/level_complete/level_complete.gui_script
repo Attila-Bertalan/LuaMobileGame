@@ -1,0 +1,17 @@
+local game_state = require "main.game_state"
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	print("start")
+end
+
+function on_input(self, action_id, action)
+	if(action_id == hash("touch") and action.released == true) then
+		local next = gui.get_node("nextbox")
+		print("touched")
+		print(game_state.current_level)
+		if(gui.pick_node(next,action.x,action.y)) then
+			msg.post("loader:/loader", "next") 
+		end
+	end
+end

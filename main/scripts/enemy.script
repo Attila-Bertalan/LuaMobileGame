@@ -1,0 +1,48 @@
+function init(self)
+	self.center = go.get_position()
+	self.radius = 30 
+	self.speed = 2
+	self.t = 0 
+	
+	physics.set_gravity(vmath.vector3(0, -100.0, 0))
+	self.downward_speed = 100
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("trigger_response") and message.enter then
+		msg.post("/score#score", "add_score")
+
+		sound.play("#death")
+		sprite.play_flipbook("#enemy", "death", function()
+
+			go.delete()
+		end)
+
+	end
+end 
+function rotate(self, dt)
+	
+	--code for rotation
+	self.t = self.t + dt
+	local dx = math.sin(self.t * self.speed) * self.radius
+	local dy = math.cos(self.t * self.speed) * self.radius
+	local pos = go.get_position()
+	pos.x = pos.x + dx
+	pos.y = pos.y + dy
+	--go.set_position()
+	
+end
+	
+function update(self, dt)
+
+	--rotate(self,dt)
+
+	-- code for movement down
+	local move_down = go.get_position()
+	move_down.y = move_down.y - self.downward_speed * dt
+	if move_down.y < -32 then
+		go.delete()
+	end
+	go.set_position(move_down)
+	
+end
